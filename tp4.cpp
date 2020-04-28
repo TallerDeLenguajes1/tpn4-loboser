@@ -11,6 +11,7 @@ struct Tarea {
 }; 
 
 void cargarTareas(Tarea * TareasPendientes,int cantTareas);
+void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 
 int main() {
     int cantTareas;
@@ -22,7 +23,7 @@ int main() {
     Tarea * TareasRealizadas = (Tarea *) malloc(sizeof(Tarea)*cantTareas);
 
     cargarTareas(TareasPendientes,cantTareas);
-
+    realizarTareas(TareasPendientes,TareasRealizadas,cantTareas);
 }
 
 void cargarTareas(Tarea * TareasPendientes,int cantTareas){
@@ -32,7 +33,7 @@ void cargarTareas(Tarea * TareasPendientes,int cantTareas){
         int duracion;
         (TareasPendientes + i)->TareaID = i + 1;
 
-        printf("Tarea Nº%d", i);
+        printf("Tarea Nº%d", i+1);
         printf("Descripcion: ");
         fflush(stdin);
         gets(descripcion);
@@ -44,6 +45,27 @@ void cargarTareas(Tarea * TareasPendientes,int cantTareas){
             scanf("%d",&duracion);
         } while (duracion<10 || duracion>100);
         (TareasPendientes + i)->Duracion = duracion;
+        system("cls");
     }   
 }
 
+void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+    int aux;
+    for (int i = 0; i < cantTareas; i++)
+    {
+        printf("Esta tarea esta realizada?\n\n");
+        printf("Tarea Nº%d", (TareasPendientes + i)->TareaID);
+        puts((TareasPendientes + i)->Descripcion);
+        printf("Duracion: %d\n\n", (TareasPendientes + i)->Duracion);
+        do
+        {
+            printf("1 / 0 (Si / No)");
+            scanf("%d",&aux);
+        } while (aux != 0 && aux != 1);
+        if (aux == 1)
+        {
+            *(TareasRealizadas + i) = *(TareasPendientes + i);
+        }
+        system("cls");
+    }
+}
