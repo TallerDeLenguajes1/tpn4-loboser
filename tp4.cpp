@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstdlib>
-#include <time.h>
 
 struct Tarea {
     int TareaID; //Numerado en ciclo iterativo
@@ -13,8 +12,10 @@ struct Tarea {
 void cargarTareas(Tarea * TareasPendientes,int cantTareas);
 void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
+void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id);
 
 int main() {
+    int id;
     int cantTareas;
     printf("Cuantas tareas desea cargar?: ");
     scanf("%d",&cantTareas);
@@ -26,6 +27,12 @@ int main() {
     cargarTareas(TareasPendientes,cantTareas);
     realizarTareas(TareasPendientes,TareasRealizadas,cantTareas);
     mostrarTareas(TareasPendientes,TareasRealizadas,cantTareas);
+
+    printf("|||||||||||||||||BUSCAR TAREAS|||||||||||||||||\n\n");
+    printf("Ingresar ID: ");
+    scanf("%d", &id);
+    buscarTarea(TareasPendientes,TareasRealizadas,cantTareas,id);
+    getchar();
     getchar();
     getchar();
 }
@@ -103,4 +110,24 @@ void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas, int cantTa
         }
        TareasPendientes++;
     }  
+}
+
+void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id){
+    for (int i = 0; i < cantTareas; i++)
+    {
+        if (TareasPendientes->TareaID == id)
+        {
+            printf("\nTarea ID: %d \n", TareasPendientes->TareaID);
+		    printf("Descripcion: \"%s\"\n", TareasPendientes->Descripcion);
+		    printf("Duracion: %d\n\n", TareasPendientes->Duracion);
+        }
+        else if (TareasRealizadas->TareaID == id)
+        {
+            printf("\nTarea ID: %d \n", TareasRealizadas->TareaID);
+			printf("Descripcion: \"%s\"\n", TareasRealizadas->Descripcion);
+			printf("Duracion: %d\n\n", TareasRealizadas->Duracion);
+        }
+        TareasRealizadas++;
+        TareasPendientes++;
+    }
 }
