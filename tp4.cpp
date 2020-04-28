@@ -54,9 +54,9 @@ void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTa
     for (int i = 0; i < cantTareas; i++)
     {
         printf("Esta tarea esta realizada?\n\n");
-        printf("Tarea Nº%d", (TareasPendientes + i)->TareaID);
-        puts((TareasPendientes + i)->Descripcion);
-        printf("Duracion: %d\n\n", (TareasPendientes + i)->Duracion);
+        printf("Tarea Nº%d", TareasPendientes->TareaID);
+        puts(TareasPendientes->Descripcion);
+        printf("Duracion: %d\n\n", TareasPendientes->Duracion);
         do
         {
             printf("1 / 0 (Si / No)");
@@ -64,8 +64,14 @@ void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTa
         } while (aux != 0 && aux != 1);
         if (aux == 1)
         {
-            *(TareasRealizadas + i) = *(TareasPendientes + i);
+            *TareasRealizadas = *TareasPendientes;
+            TareasPendientes = NULL;
+        }else
+        {
+            TareasRealizadas = NULL;
         }
+        TareasPendientes++;
+        TareasRealizadas++;
         system("cls");
     }
 }
