@@ -12,11 +12,12 @@ struct Tarea {
 void cargarTareas(Tarea * TareasPendientes,int cantTareas);
 void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
-void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id);
+Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id);
 
 int main() {
     int id;
     int cantTareas;
+    Tarea Resultado;
     printf("Cuantas tareas desea cargar?: ");
     scanf("%d",&cantTareas);
     system("cls");
@@ -31,7 +32,16 @@ int main() {
     printf("|||||||||||||||||BUSCAR TAREAS|||||||||||||||||\n\n");
     printf("Ingresar ID: ");
     scanf("%d", &id);
-    buscarTarea(TareasPendientes,TareasRealizadas,cantTareas,id);
+    Resultado = buscarTarea(TareasPendientes,TareasRealizadas,cantTareas,id);
+    if (Resultado.TareaID == 0)
+    {
+        printf("No se pudo encontrar el ID");
+    }else
+    {
+        printf("\nTarea ID: %d \n", Resultado.TareaID);
+		printf("Descripcion: \"%s\"\n", Resultado.Descripcion);
+		printf("Duracion: %d\n\n", Resultado.Duracion);
+    }
     getchar();
     getchar();
     getchar();
@@ -112,22 +122,21 @@ void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas, int cantTa
     }  
 }
 
-void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id){
+Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,int id){
     for (int i = 0; i < cantTareas; i++)
     {
         if (TareasPendientes->TareaID == id)
         {
-            printf("\nTarea ID: %d \n", TareasPendientes->TareaID);
-		    printf("Descripcion: \"%s\"\n", TareasPendientes->Descripcion);
-		    printf("Duracion: %d\n\n", TareasPendientes->Duracion);
+            return *TareasPendientes;
         }
         else if (TareasRealizadas->TareaID == id)
         {
-            printf("\nTarea ID: %d \n", TareasRealizadas->TareaID);
-			printf("Descripcion: \"%s\"\n", TareasRealizadas->Descripcion);
-			printf("Duracion: %d\n\n", TareasRealizadas->Duracion);
+            return *TareasRealizadas;
         }
         TareasRealizadas++;
         TareasPendientes++;
     }
+    Tarea Sin;
+    Sin.TareaID = 0;
+    return Sin;
 }
