@@ -13,11 +13,13 @@ void cargarTareas(Tarea * TareasPendientes,int cantTareas);
 void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
+Tarea buscarTareaID(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 
 int main() {
-    char palabra[60];
     int cantTareas;
     Tarea Resultado;
+    Tarea ResultadoID;
+    
     printf("Cuantas tareas desea cargar?: ");
     scanf("%d",&cantTareas);
     system("cls");
@@ -30,7 +32,6 @@ int main() {
     mostrarTareas(TareasPendientes,TareasRealizadas,cantTareas);
 
     printf("|||||||||||||||||BUSCAR TAREAS|||||||||||||||||\n\n");
-
     Resultado = buscarTarea(TareasPendientes,TareasRealizadas,cantTareas);
     if (Resultado.TareaID == 0){
         printf("No se pudo encontrar la palabra");
@@ -40,7 +41,19 @@ int main() {
 		printf("Descripcion: \"%s\"\n", Resultado.Descripcion);
 		printf("Duracion: %d\n\n", Resultado.Duracion);
     }
+
+    ResultadoID = buscarTareaID(TareasPendientes,TareasRealizadas,cantTareas);
+    if (ResultadoID.TareaID == 0)
+    {
+        printf("No se pudo encontrar el ID");
+    }else
+    {
+        printf("\nTarea ID: %d \n", ResultadoID.TareaID);
+		printf("Descripcion: \"%s\"\n", ResultadoID.Descripcion);
+		printf("Duracion: %d\n\n", ResultadoID.Duracion);
+    }
     
+    getchar();
     getchar();
 }
 
@@ -142,7 +155,29 @@ Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTare
 		    	(TareasPendientes->Descripcion)++;
 			}
 		}
-		TareasRealizadas++; 
+		TareasRealizadas++;
+        TareasPendientes++;
+    }
+    Tarea Sin;
+    Sin.TareaID = 0;
+    return Sin;
+}
+
+Tarea buscarTareaID(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+    int id;
+    printf("\nIngresar ID: ");
+    scanf("%d", &id);
+    for (int i = 0; i < cantTareas; i++)
+    {
+        if (TareasPendientes->TareaID == id)
+        {
+            return *TareasPendientes;
+        }
+        else if (TareasRealizadas->TareaID == id)
+        {
+            return *TareasRealizadas;
+        }
+        TareasRealizadas++;
         TareasPendientes++;
     }
     Tarea Sin;
