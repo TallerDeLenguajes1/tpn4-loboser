@@ -12,11 +12,12 @@ struct Tarea {
 void cargarTareas(Tarea * TareasPendientes,int cantTareas);
 void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
-void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,char palabra[]);
+Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
 
 int main() {
     char palabra[60];
     int cantTareas;
+    Tarea Resultado;
     printf("Cuantas tareas desea cargar?: ");
     scanf("%d",&cantTareas);
     system("cls");
@@ -29,10 +30,17 @@ int main() {
     mostrarTareas(TareasPendientes,TareasRealizadas,cantTareas);
 
     printf("|||||||||||||||||BUSCAR TAREAS|||||||||||||||||\n\n");
-    fflush(stdin);
-    printf("Ingresar palabra clave: ");
-    gets(palabra);
-    buscarTarea(TareasPendientes,TareasRealizadas,cantTareas,palabra);
+
+    Resultado = buscarTarea(TareasPendientes,TareasRealizadas,cantTareas);
+    if (Resultado.TareaID == 0){
+        printf("No se pudo encontrar la palabra");
+    }else
+    {
+        printf("\nTarea ID: %d \n", Resultado.TareaID);
+		printf("Descripcion: \"%s\"\n", Resultado.Descripcion);
+		printf("Duracion: %d\n\n", Resultado.Duracion);
+    }
+    
     getchar();
 }
 
@@ -111,28 +119,33 @@ void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas, int cantTa
     }  
 }
 
-void buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas,char palabra[]){
-    int c = 0;
-    char * aux = NULL;
-    while (c < cantTareas && aux == NULL)
+Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+    char palabra[60];
+    printf("Ingresar palabra clave: ");
+    fflush(stdin);
+    gets(palabra);
+    for (int i = 0; i < cantTareas; i++)
     {
-        aux = strstr(TareasPendientes->Descripcion,palabra);
-        if (aux != NULL && TareasPendientes->TareaID !=0)
-        {
-            printf("\nTarea ID: %d \n", TareasPendientes->TareaID);
-		    printf("Descripcion: \"%s\"\n", TareasPendientes->Descripcion);
-		    printf("Duracion: %d\n\n", TareasPendientes->Duracion);
-        }
-
-        aux = strstr(TareasRealizadas->Descripcion,palabra);
-        if (aux && TareasRealizadas->TareaID !=0)
-        {
-            printf("\nTarea ID: %d \n", TareasRealizadas->TareaID);
-		    printf("Descripcion: \"%s\"\n", TareasRealizadas->Descripcion);
-		    printf("Duracion: %d\n\n", TareasRealizadas->Duracion);
-        }
-        c++;
-        TareasRealizadas++;
+        if(TareasRealizadas->TareaID != 0){
+			while(*(TareasRealizadas->Descripcion) != '\0'){
+				if(strstr(TareasRealizadas->Descripcion, palabra)){
+		            return *TareasRealizadas;
+		    	}
+		    	(TareasRealizadas->Descripcion)++;
+			}
+		}
+		if(TareasPendientes->TareaID != 0){
+			while(*(TareasPendientes->Descripcion) != '\0'){
+				if(strstr(TareasPendientes->Descripcion, palabra)){
+		            return *TareasPendientes;
+		    	}
+		    	(TareasPendientes->Descripcion)++;
+			}
+		}
+		TareasRealizadas++; 
         TareasPendientes++;
     }
+    Tarea Sin;
+    Sin.TareaID = 0;
+    return Sin;
 }
