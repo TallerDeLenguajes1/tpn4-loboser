@@ -9,14 +9,15 @@ struct Tarea {
     int Duracion; // entre 10 – 100
 }; 
 
-void cargarTareas(Tarea * TareasPendientes,int cantTareas);
-void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
-void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
-Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
-Tarea buscarTareaID(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas);
+void cargarTareas(Tarea ** TareasPendientes,int cantTareas);
+int realizarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas);
+void mostrarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas,int cantRealizadas);
+Tarea buscarTarea(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas);
+Tarea buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas);
 
 int main() {
     int cantTareas;
+    int cantRealizadas;
     Tarea Resultado;
     Tarea ResultadoID;
     
@@ -24,15 +25,15 @@ int main() {
     scanf("%d",&cantTareas);
     system("cls");
 
-    Tarea * TareasPendientes = (Tarea *) malloc(sizeof(Tarea)*cantTareas);
-    Tarea * TareasRealizadas = (Tarea *) malloc(sizeof(Tarea)*cantTareas);
+    Tarea ** TareasPendientes = (Tarea **) malloc(sizeof(Tarea)*cantTareas);
+    Tarea ** TareasRealizadas = (Tarea **) malloc(sizeof(Tarea)*cantTareas);
 
     cargarTareas(TareasPendientes,cantTareas);
-    realizarTareas(TareasPendientes,TareasRealizadas,cantTareas);
-    mostrarTareas(TareasPendientes,TareasRealizadas,cantTareas);
+    cantRealizadas = realizarTareas(TareasPendientes,TareasRealizadas,cantTareas);
+    mostrarTareas(TareasPendientes,TareasRealizadas,cantTareas,cantRealizadas);
 
     printf("|||||||||||||||||BUSCAR TAREAS|||||||||||||||||\n\n");
-    Resultado = buscarTarea(TareasPendientes,TareasRealizadas,cantTareas);
+    Resultado = buscarTarea(TareasPendientes,TareasRealizadas,cantTareas,cantRealizadas);
     if (Resultado.TareaID == 0){
         printf("No se pudo encontrar la palabra");
     }else
@@ -42,7 +43,7 @@ int main() {
 		printf("Duracion: %d\n\n", Resultado.Duracion);
     }
 
-    ResultadoID = buscarTareaID(TareasPendientes,TareasRealizadas,cantTareas);
+    ResultadoID = buscarTareaID(TareasPendientes,TareasRealizadas,cantTareas,cantRealizadas);
     if (ResultadoID.TareaID == 0)
     {
         printf("No se pudo encontrar el ID");
@@ -57,40 +58,41 @@ int main() {
     getchar();
 }
 
-void cargarTareas(Tarea * TareasPendientes,int cantTareas){
+void cargarTareas(Tarea ** TareasPendientes,int cantTareas){
     for (int i = 0; i < cantTareas; i++)
     {
+        TareasPendientes[i] = (Tarea *) malloc(sizeof(Tarea));;
         char descripcion[60];
         int duracion = 0;
 
         printf("Tarea #%d\n", i+1);
-        TareasPendientes->TareaID = i + 1;
+        TareasPendientes[i]->TareaID = i + 1;
 
         printf("Descripcion: ");
         fflush(stdin);
         gets(descripcion);
-        TareasPendientes->Descripcion = (char*)malloc(sizeof(descripcion)*(strlen(descripcion)));
-        strcpy(TareasPendientes->Descripcion,descripcion);
+        TareasPendientes[i]->Descripcion = (char*)malloc(sizeof(descripcion)*(strlen(descripcion)));
+        strcpy(TareasPendientes[i]->Descripcion,descripcion);
 
         do
         {
             printf("Duracion: ");
             scanf("%d",&duracion);
         } while (duracion<10 || duracion>100);
-        TareasPendientes->Duracion = duracion;
+        TareasPendientes[i]->Duracion = duracion;
         system("cls");
-        TareasPendientes++;
     }   
 }
 
-void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+int realizarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas){
     int aux;
+    int v = 0;
     for (int i = 0; i < cantTareas; i++)
     {
         printf("Esta tarea esta realizada?\n\n");
-        printf("Tarea ID: %d\n", TareasPendientes->TareaID);
-        printf("Descripcion: \"%s\"\n", TareasPendientes->Descripcion);
-        printf("Duracion: %d\n\n", TareasPendientes->Duracion);
+        printf("Tarea ID: %d\n", TareasPendientes[i]->TareaID);
+        printf("Descripcion: \"%s\"\n", TareasPendientes[i]->Descripcion);
+        printf("Duracion: %d\n\n", TareasPendientes[i]->Duracion);
         do
         {
             printf("1 / 0 (Si / No): ");
@@ -98,87 +100,84 @@ void realizarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTa
         } while (aux != 0 && aux != 1);
         if (aux == 1)
         {
-            *TareasRealizadas = *TareasPendientes;
-            TareasPendientes->TareaID = 0;
-        }else
-        {
-            TareasRealizadas->TareaID = 0;
+            TareasRealizadas[v] = TareasPendientes[i];
+            TareasPendientes[i] = NULL;
+            v++;
         }
         system("cls");
-        TareasPendientes++;
-        TareasRealizadas++;
     }
+    return v;
 }
 
-void mostrarTareas(Tarea * TareasPendientes,Tarea * TareasRealizadas, int cantTareas){
+void mostrarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas, int cantTareas, int cantRealizadas){
     printf("|||||||||||||||||TAREAS REALIZADAS|||||||||||||||||\n\n");
-	for(int i = 0; i < cantTareas; i++){
-		if(TareasRealizadas->TareaID != 0){
-			printf("Tarea ID: %d \n", TareasRealizadas->TareaID);
-			printf("Descripcion: \"%s\"\n", TareasRealizadas->Descripcion);
-			printf("Duracion: %d\n\n", TareasRealizadas->Duracion);
+	for(int i = 0; i < cantRealizadas; i++){
+		if(TareasRealizadas[i]){
+			printf("Tarea ID: %d \n", TareasRealizadas[i]->TareaID);
+			printf("Descripcion: \"%s\"\n", TareasRealizadas[i]->Descripcion);
+			printf("Duracion: %d\n\n", TareasRealizadas[i]->Duracion);
 		}
-		TareasRealizadas++;
 	}
     printf("|||||||||||||||||TAREAS PENDIENTES|||||||||||||||||\n\n");
     for (int i = 0; i < cantTareas; i++)
     {
-        if (TareasPendientes->TareaID != 0){
-            printf("Tarea ID: %d \n", TareasPendientes->TareaID);
-		    printf("Descripcion: \"%s\"\n", TareasPendientes->Descripcion);
-		    printf("Duracion: %d\n\n", TareasPendientes->Duracion);
+        if (TareasPendientes[i]){
+            printf("Tarea ID: %d \n", TareasPendientes[i]->TareaID);
+		    printf("Descripcion: \"%s\"\n", TareasPendientes[i]->Descripcion);
+		    printf("Duracion: %d\n\n", TareasPendientes[i]->Duracion);
         }
-        TareasPendientes++;
     }  
 }
 
-Tarea buscarTarea(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+Tarea buscarTarea(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas){
     char palabra[60];
     printf("Ingresar palabra clave: ");
     fflush(stdin);
     gets(palabra);
+    for (int i = 0; i < cantRealizadas; i++)
+    {
+        if(TareasRealizadas[i]){
+			while(*(TareasRealizadas[i]->Descripcion) != '\0'){
+				if(strstr(TareasRealizadas[i]->Descripcion, palabra)){
+		            return *TareasRealizadas[i];
+		    	}
+		    	(TareasRealizadas[i]->Descripcion)++;
+			}
+		}
+    }
     for (int i = 0; i < cantTareas; i++)
     {
-        if(TareasRealizadas->TareaID != 0){
-			while(*(TareasRealizadas->Descripcion) != '\0'){
-				if(strstr(TareasRealizadas->Descripcion, palabra)){
-		            return *TareasRealizadas;
+		if(TareasPendientes[i]){
+			while(*(TareasPendientes[i]->Descripcion) != '\0'){
+				if(strstr(TareasPendientes[i]->Descripcion, palabra)){
+		            return *TareasPendientes[i];
 		    	}
-		    	(TareasRealizadas->Descripcion)++;
+		    	(TareasPendientes[i]->Descripcion)++;
 			}
 		}
-		if(TareasPendientes->TareaID != 0){
-			while(*(TareasPendientes->Descripcion) != '\0'){
-				if(strstr(TareasPendientes->Descripcion, palabra)){
-		            return *TareasPendientes;
-		    	}
-		    	(TareasPendientes->Descripcion)++;
-			}
-		}
-		TareasRealizadas++;
-        TareasPendientes++;
     }
     Tarea Sin;
     Sin.TareaID = 0;
     return Sin;
 }
 
-Tarea buscarTareaID(Tarea * TareasPendientes,Tarea * TareasRealizadas,int cantTareas){
+Tarea buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas){
     int id;
     printf("\nIngresar ID: ");
     scanf("%d", &id);
     for (int i = 0; i < cantTareas; i++)
     {
-        if (TareasPendientes->TareaID == id)
+        if (TareasPendientes[i]->TareaID == id)
         {
-            return *TareasPendientes;
+            return *TareasPendientes[i];
         }
-        else if (TareasRealizadas->TareaID == id)
+    }
+    for (int i = 0; i < cantRealizadas; i++)
+    {
+        if (TareasRealizadas[i]->TareaID == id)
         {
-            return *TareasRealizadas;
+            return *TareasRealizadas[i];
         }
-        TareasRealizadas++;
-        TareasPendientes++;
     }
     Tarea Sin;
     Sin.TareaID = 0;
