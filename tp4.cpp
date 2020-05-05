@@ -14,12 +14,11 @@ void cargarTareas(Tarea ** TareasPendientes,int cantTareas);
 void realizarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas);
 void mostrarTareas(Tarea ** TareasPendientes,Tarea ** TareasRealizadas);
 int buscarTarea(Tarea ** TareasPendientes,Tarea ** TareasRealizadas);
-Tarea * buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas);
+int buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas);
 
 int main() {
     Tarea * TareasPendientes = NULL;
     Tarea * TareasRealizadas = NULL;
-    Tarea * Resultado;
     int cantTareas;
     
     printf("Cuantas tareas desea cargar?: ");
@@ -30,13 +29,8 @@ int main() {
     realizarTareas(&TareasPendientes,&TareasRealizadas,cantTareas);
     mostrarTareas(&TareasPendientes,&TareasRealizadas);
     buscarTarea(&TareasPendientes,&TareasRealizadas);
-    Resultado = buscarTareaID(&TareasPendientes,&TareasRealizadas);
-    if (Resultado)
-    {
-        printf("Tarea ID: %d \n", Resultado->TareaID);
-		printf("Descripcion: \"%s\"\n", Resultado->Descripcion);
-	    printf("Duracion: %d\n\n", Resultado->Duracion);
-    }
+    buscarTareaID(&TareasPendientes,&TareasRealizadas);
+
     getchar();
     getchar();
     return 0;
@@ -199,7 +193,7 @@ int buscarTarea(Tarea ** TareasPendientes,Tarea ** TareasRealizadas){
     return 0;
 }
 
-Tarea * buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas){
+int buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas){
     Tarea * Aux = *TareasPendientes;
     Tarea * Aux2 = *TareasRealizadas;
 
@@ -210,23 +204,22 @@ Tarea * buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int ca
     {
         if (Aux2->TareaID == id)
         {
-            // printf("Tarea ID: %d \n", Aux2->TareaID);
-		    // printf("Descripcion: \"%s\"\n", Aux2->Descripcion);
-	        // printf("Duracion: %d\n\n", Aux2->Duracion);
-            return Aux2;
+            printf("Tarea ID: %d \n", Aux2->TareaID);
+		    printf("Descripcion: \"%s\"\n", Aux2->Descripcion);
+	        printf("Duracion: %d\n\n", Aux2->Duracion);
+            return 1;
         }
     }
     while (Aux)
     {
         if (Aux->TareaID == id)
         {
-            // printf("Tarea ID: %d \n", Aux->TareaID);
-            // printf("Descripcion: \"%s\"\n", Aux->Descripcion);
-            // printf("Duracion: %d\n\n", Aux->Duracion);
-            return Aux;
+            printf("Tarea ID: %d \n", Aux->TareaID);
+            printf("Descripcion: \"%s\"\n", Aux->Descripcion);
+            printf("Duracion: %d\n\n", Aux->Duracion);
+            return 1;
         }
     }
-    // printf("No se pudo encontrar el ID.");
-    Tarea * Resultado = NULL;
-    return Resultado;
+    printf("No se pudo encontrar el ID.");
+    return 0;
 }
