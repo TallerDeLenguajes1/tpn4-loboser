@@ -193,32 +193,34 @@ int buscarTarea(Tarea ** TareasPendientes,Tarea ** TareasRealizadas){
     return 0;
 }
 
-int buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas,int cantTareas, int cantRealizadas){
+int buscarTareaID(Tarea ** TareasPendientes,Tarea ** TareasRealizadas){
     Tarea * Aux = *TareasPendientes;
     Tarea * Aux2 = *TareasRealizadas;
 
     int id;
-    printf("\nIngresar ID: ");
+    printf("Ingresar ID: ");
     scanf("%d", &id);
     while (Aux2)
     {
         if (Aux2->TareaID == id)
         {
-            printf("Tarea ID: %d \n", Aux2->TareaID);
+            printf("\nTarea ID: %d \n", Aux2->TareaID);
 		    printf("Descripcion: \"%s\"\n", Aux2->Descripcion);
 	        printf("Duracion: %d\n\n", Aux2->Duracion);
             return 1;
         }
+        Aux2 = Aux2->Siguiente;
     }
     while (Aux)
     {
         if (Aux->TareaID == id)
         {
-            printf("Tarea ID: %d \n", Aux->TareaID);
+            printf("\nTarea ID: %d \n", Aux->TareaID);
             printf("Descripcion: \"%s\"\n", Aux->Descripcion);
             printf("Duracion: %d\n\n", Aux->Duracion);
             return 1;
         }
+        Aux = Aux->Siguiente;
     }
     printf("No se pudo encontrar el ID.");
     return 0;
